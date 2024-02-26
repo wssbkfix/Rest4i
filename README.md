@@ -27,4 +27,11 @@ This command can be broken down into the following components
 Special note.  I did this on a system that did not have Rest4i installed, so the generated code was a cut and paste. from the tutorial manual.  
 
 ### The generated code
-In this case 
+In this case the generated code matches closely to the example in the Tutorial.  To run the code I had to enter two parameters.  I put in two just in case I needed another one.  Not sure how the autogenerator would work on this one.  In my program the first parameter is the search value for the ID field.  
+
+### Components of the code 
+Below are some of the highlights 
+
+1- 
+
+
