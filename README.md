@@ -16,7 +16,7 @@ link to document:  [Link]https://www.midrangedynamics.com/wp-content/uploads/202
 
 The example I am using comes from the tutorial guide (see link above) starting at page 24 (Get Method Service with Database reads)
 
-### The MDRGENPRD command
+### The MDRGENPRD command gneral comments
 This command can be broken down into the following components
 1- Where to put the generated source 
 2- Type of HTTP request (in this case a Get)
@@ -25,13 +25,59 @@ This command can be broken down into the following components
 5- Input parameters.  All the needed paramters are listed here.  In this case just one parameter is listed. 
 
 Special note.  I did this on a system that did not have Rest4i installed, so the generated code was a cut and paste. from the tutorial manual.  
+### The MDGENPRD command parameters used 
+note: see page 25 in the tutorial 
+1 - Source Code 
+    Target Library: WSSBKFIX21 (my pub400 library)
+    Target Source File: QRPGLESRC
+    Target Source Member: R4IDBRPGM 
+2- Get Method Required: Y 
+3- Data Format J (JSON object returned)
+4- Response Processing Method USR (parameter: In my code I pouplate a data area OUTJOSON so I can see the results)
+5- Processing Type: D (This generates SQL statements)
+6- Include Paging Logic: N (described in separate document)
+7- Default DB file:  (This appears because this is a D processing type)
+8- List of parameters: (id is chosen and it is not mandatory)
 
 ### The generated code
 In this case the generated code matches closely to the example in the Tutorial.  To run the code I had to enter two parameters.  I put in two just in case I needed another one.  Not sure how the autogenerator would work on this one.  In my program the first parameter is the search value for the ID field.  
 
 ### Components of the code 
+It is best to follow along with the MDCMS Tutorial guide.  The review of the code starts on page 26 of the guide 
+
 Below are some of the highlights 
 
-1- 
+1- The last line of the program brings in the copy book entry lxrrestc.  The referenced copybook is the the main line procedure of the generated program.  In simple terms, the generated code is stitched together copybook entries with parameter substitution.  A bit of an over simplification but useful to gain understanding of what is going on. 
+
+This copy book entry contains the following subroutine calls 
+  exsr Z_CustomInit The stub code is very customizable. You can read the embedded remarks in the tutorial for some of the custom points     
+                        
+  exsr z_checkParms The number of paramters is not fixed.  The command that generated the stub code you to customoize the parameters and indicate if they are mandatory;      
+                        
+  exsr z_setParms:  Brings in the values of the parameter.         
+                        
+  exsr z_ProcGET: In the command setup, we set this up as a HTTP Get so the z_ProcGET call is inserted into the stub code.  Inside the z_ProcGet most of program is called.   
+
+2- Build of the SQL statement.  Dynamic SQL is used to build the statement.  The statement is built from the field names of the table and simply concatenated together.  The where clause comes from the parameters.  Of note is that the a simple string is built without the use of parameter markers.  This probably does not play well with the optimizer.  When I construct queries I use parameter makers so I don't need to prepare the statement each time.  see note 2 
+
+Note that a instead of SELECT INTO being used, a Fetch is being used.  This approach allows for multiple rows to be retrieved and placed in the d_S data structure.  
+
+3- Building the return set.  In the command call JSON was chosen so the generated code builds a JSON data set.  The d_S data structure is defined where all of the fields from the SQL Query are placed.  From this data structure, the values are placed in the data d_S data structure.  
+
+The Z_ProcessSend subroutine (line 209.00) is used to convert the data structure into the JSON object. The JSON object is started with the beginObject function call, and each field is used either the addChar or addIntr function.  For me, this is one of the biggest benefits.  Getting JSON format without any effort.  This is much easier than using Data-Into or SQL to accomplish this, and its all done for you.   
+
+4- Making your own improvements:  Maybe there is some code you would like to improve.  No problem.  The code is generated into you developer library, so You can make any changes you want. Let say you wanted to use paramter markers.  No problem, you can take the lines in the z_PrcResponse subroutine and change them to your liking.  Maybe you do not want to return all of the fields from the file, you can nust take them out.  You will need to manually change the data structure and the building of the JSON object.  
+
+## Design Considerations 
+1- Returning multiple rows.  That deserves its own document that will be supplied later.  Another related design considerations is would you change the approach if you knew only one return row set was possible?  
+2- What if I want to retrieve the data using an SQL procedure.  A little more work, but that can also be done. 
+
+## disclaimer 
+The sole purpose of this document is to show how one could use the Rest4i product.  The R4IDBRPGM is copied from the Tutorial guide.  I copied this because I did this on pub400 and it does not have the Rest4i product installed. 
+
+The lxrrestc, lexrrestp, mdrestdfn copy book members are guesses on my part.  Remember pub400 does not have the product.  Also, these guesses work for the scenario I gave, retrieve one record and return a JSON object.  The real product can return XLM, JSON, and via a paramter IFS or a database file.  
+
+The goal is to for one to gain understanding of the product and how it may fit in at your company. 
+
 
 
