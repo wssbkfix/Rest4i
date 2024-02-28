@@ -55,7 +55,7 @@ This copy book entry contains the following subroutine calls
 
   **exsr z_checkParms:** The number of parameters is not fixed.  The command that generated the stub code you to customize the parameters and indicate if they are mandatory;       
 
-  **exsr z_setParms:** Brings in the values of the parameter.  that generated the stub code you to customize the parameters and indicate if they are mandatory                                    
+  **exsr z_setParms:** Brings in the values of the parameter.  You may customize the generated the stub code you handle the parameters.                                      
                         
   **exsr z_ProcGET:** In the command setup, we set this up as a HTTP Get so the z_ProcGET call is inserted into the stub code. Inside the z_ProcGet most of rest of the program is called. 
 
