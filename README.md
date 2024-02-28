@@ -16,6 +16,34 @@ link to document:  [Link]https://www.midrangedynamics.com/wp-content/uploads/202
 
 The example I am using comes from the tutorial guide (see link above) starting at page 24 (Get Method Service with Database reads)
 
+### My supplied sample code
+I have supplied the following sample code 
+1. R4IDBRPGM. Did not code much.  When one has Rest4i, this is the generated code.  Since PUB400 does not have Rest4i, I copied the code from the tutorial manual starting at page 26.  I did add lines to ouptput to a data area.  I did this just to see if the ouptput was correct.
+1. MDRESTDFN:  Most of this is guess work on my part.  It contains variables used in the generated code that were not defined in the generated but most like in this piece of code. As the name would suggest this code supplied the definitions or D specs for the generated code.   
+2. LXRRESTC: Again guesswork on my part, but if you noticed the generated code does not specify an entry point so one must be supplied somewhere and the positioning of the copy statmement suggest this is where the subroutines are called. 
+3. LXRRESTP: You may have noticed that none of the called procedures are defined in the generated code so the procedures are in the LXRRESTP code.  The code I provided works for a very limited list of scenarios.  I'm sure the copy book entries are much more robust.  The whole point of the excercise is to show that such an approach works.
+4. Note of physical files used:  As you can see in the SELECT file, the LXCLIENT file is accessed with all of the fields being retrieved.  Below is a list of the fields with their definitions.  A file can be created with a simple CREATE TABLE statement with the following fields.
+   Definition of LXCLIENTP (taken right out of the tutorial) 
+
+| Col Name   | Type Length - in bytes |
+| ---------- | ------- | 
+| ID        | INTEGER    4            |
+| CLIDNO    | CHAR      15 |
+| CLNAME    | CHAR      30 |
+| CLSURNAME | CHAR      30 |
+| CLTITLE   | CHAR      10 |
+| CLPHONE   | CHAR      15 |
+| CLEMAIL   | CHAR     100 |
+| CLADDR1   | CHAR      30 |
+| CLADDR2   | CHAR      30 |
+| CLADDR3   | CHAR      30 |
+| CLPCODE   | CHAR      15 |
+| CLLANG    | CHAR       1 |
+
+5. Final notes on code:  You may have noticed that the supplied code just barely works.  I don't account for multiple rows returned and not much in the way of error handling.  What I wanted to show is how running a Rest4i Command with just a few parameters supplied working code.  I think this is impressive.  Before concluding it is the Best solution for my business needs more input.  The product does deserve a serious look.   
+   
+
+
 ### The MDRGENPRD command general comments
 This command can be broken down into the following components 
 
@@ -23,7 +51,7 @@ This command can be broken down into the following components
 2. Type of HTTP request (in this case a Get) 
 3. Response: Will be results be placed in a DB file, IFS file, or passed back as a parameter? In this example I force the output to a data area.    
 4. Processing type: Is processing based on reading a table (what is chosen here), calling another program, or nothing. The last scenario would be used if special logic needs to be coded.  
-5. Input parameters. All the necessary parameters are listed here. In this case just one parameter is listed.  
+5. Input parameters. All the necessary parameters are listed here. In this case just one parameter is defined.  Multiple parameters could be defined if a more complex where clause is called for.    
 
 Special note. I did this on a system that did not have Rest4i installed, so the generated code was cut and pasted. from the tutorial manual.  
 ### The MDGENPRD command parameters used 
@@ -33,15 +61,16 @@ note: see page 25 in the tutorial
 
     Target Library: WSSBKFIX21 (my pub400 library) 
     Target Source File: QRPGLESRC 
-    Target Source Member: R4IDBRPGM  
+    Target Source Member: R4IDBRPGM
+    note: Since PUB400 does not have Rest4i, I copied the code from the Tutorial manual.  
 
-2. Get Method Required: Y  
-3. Data Format J (JSON object returned) 
-4. Response Processing Method USR (parameter: In my code I populate a data area OUTJOSON so I can see the results) 
-5. Processing Type: D (This generates SQL statements) 
-6. Include Paging Logic: N (described in separate document) 
-7. Default DB file: (This appears because this is a D processing type) 
-8. List of parameters: (id is chosen and it is not mandatory) 
+3. Get Method Required: Y  
+4. Data Format J (JSON object returned) 
+5. Response Processing Method USR (parameter: In my code I populate a data area OUTJOSON so I can see the results) 
+6. Processing Type: D (This generates SQL statements) 
+7. Include Paging Logic: N (described in separate document) 
+8. Default DB file: (This appears because this is a D processing type) 
+9. List of parameters: (id is chosen and it is not mandatory) 
 
 ### The generated code
 In this case the generated code matches closely to the example in the Tutorial. To run the code, I had to enter two parameters. I put in two just in case I needed another one. Not sure how the auto generator would work on this one. In my program the first parameter is the search value for the ID field.    
