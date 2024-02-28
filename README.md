@@ -40,7 +40,7 @@ I have supplied the following sample code
 | CLPCODE   | CHAR      15 |
 | CLLANG    | CHAR       1 |
 
-5. Final notes on code:  You may have noticed that the supplied code just barely works.  I don't account for multiple rows returned and not much in the way of error handling.  What I wanted to show is how running a Rest4i Command with just a few parameters supplied working code.  I think this is impressive.  Before concluding it is the Best solution for my business needs more input.  The product does deserve a serious look.   
+5. Final notes on code:  You may have noticed that the supplied code just barely works.  I don't account for multiple rows returned and not much in the way of error handling.  What I wanted to show is how running a Rest4i Command with just a few parameters supplied working code.  How Rest4i suppied generated code is impressive.  Before concluding it is the Best solution for my business needs more input.  The product does deserve a serious look.   
    
 
 
